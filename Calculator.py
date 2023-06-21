@@ -1,4 +1,5 @@
 import sys
+from math import sqrt
 from functools import partial
 from PySide6.QtGui import QPainter, QPen
 from PySide6.QtCore import Qt, Slot
@@ -45,15 +46,16 @@ class MainWindow(QMainWindow):
             equation = equation.replace('x²', '')
             self.label.setText(equation) #Takes care of gui
         if text == '√':
-            equation = '0'
-            self.label.setText(equation) #needs fix
+            equation = equation.replace('√', '')
+            equation = '√' + equation
+            self.label.setText(equation) #Takes care of gui
         if text == '%':
             equation = '0'
             self.label.setText(equation) #needs fix
         else:
             self.label.setText(equation)
         
-        #take care of square root
+        #take care of square
         if text == '=' and "²" in equation:
                 equation = equation.replace('²=', '')
                 equation =  equation + '**2'
@@ -61,8 +63,14 @@ class MainWindow(QMainWindow):
                 self.total = eval(equation)
                 self.label.setText(str(self.total))
                 self.solved = True
-                
-                           
+        #take care of square root        
+        if text == '=' and "√" in equation:
+            equation = equation.replace('√', '')
+            equation = equation.replace('=','')
+            equation =  sqrt(int(equation))
+            self.total = str(equation)
+            self.label.setText(self.total)
+            self.solved = True
         #take care of +,-,*, and /
         elif text == "=":
             if 'x' in equation:
