@@ -50,13 +50,27 @@ class MainWindow(QMainWindow):
             equation = '√' + equation
             self.label.setText(equation) #Takes care of gui
         if text == '%':
-            equation = '0'
-            self.label.setText(equation) #needs fix
+            self.label.setText(equation)
         else:
             self.label.setText(equation)
         
+        #take care of percentage
+        if text == '=' and '%' in equation:
+            operators = ['x','÷','-','+']
+            ind = equation.index('%')
+            for i in equation:
+                if i in operators:
+                    op = i
+            ind2 = equation.index(op)
+            percentage = '.'+equation[ind2+1:ind]
+            one_hundred_percent = equation[:ind2]            
+            n = str(float(percentage) * float(one_hundred_percent))
+            self.total = n
+            self.label.setText(self.total)
+            self.solved = True
+            
         #take care of square
-        if text == '=' and "²" in equation:
+        elif text == '=' and "²" in equation:
                 equation = equation.replace('²=', '')
                 equation =  equation + '**2'
                 print('equation',equation)
@@ -64,7 +78,7 @@ class MainWindow(QMainWindow):
                 self.label.setText(str(self.total))
                 self.solved = True
         #take care of square root        
-        if text == '=' and "√" in equation:
+        elif text == '=' and "√" in equation:
             equation = equation.replace('√', '')
             equation = equation.replace('=','')
             equation =  sqrt(int(equation))
@@ -136,7 +150,6 @@ if __name__ == '__main__':
 '''
 *current task*
 
-fix the rest of my buttons
 create button for the stack history
 use a stack as history(try and use a visual window to see what is stacked)
 make a settings button
