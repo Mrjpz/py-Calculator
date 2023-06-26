@@ -9,6 +9,10 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QV
 
 
 class MainWindow(QMainWindow):
+    @Slot()
+    def history(self):
+        #temp
+        None
     @Slot(str)
     def emit_number(self, text):
         # Button and text variables
@@ -35,7 +39,7 @@ class MainWindow(QMainWindow):
             equation = '0'
             self.label.setText(equation)
         if text == 'CE':
-            equation = '0'
+            equation = '0' #needs to be fixed
             self.label.setText(equation)
         if text == '1/(x)':
             equation = '1/(' + equation + ")"
@@ -68,15 +72,7 @@ class MainWindow(QMainWindow):
             self.total = n
             self.label.setText(self.total)
             self.solved = True
-            
-        #take care of square
-        elif text == '=' and "²" in equation:
-                equation = equation.replace('²=', '')
-                equation =  equation + '**2'
-                print('equation',equation)
-                self.total = eval(equation)
-                self.label.setText(str(self.total))
-                self.solved = True
+
         #take care of square root        
         elif text == '=' and "√" in equation:
             equation = equation.replace('√', '')
@@ -85,11 +81,14 @@ class MainWindow(QMainWindow):
             self.total = str(equation)
             self.label.setText(self.total)
             self.solved = True
-        #take care of +,-,*, and /
+        #take care of +,-,*,/, and square
         elif text == "=":
-            if 'x' in equation:
+            if "²" in equation:
+                equation = equation.replace('²=', '')
+                equation =  equation + '**2'
+            elif 'x' in equation:
                 equation = equation.replace("x", '*')
-            if '÷' in equation:
+            elif '÷' in equation:
                 equation = equation.replace("÷","/")
             equation = equation.rstrip("=")
             self.total = eval(equation)
@@ -110,12 +109,16 @@ class MainWindow(QMainWindow):
         
         # Create buttons
         buttons = ['⌫','C','CE','%','÷','√','x²','1/(x)','x','9','8','7','-','6','5','4','+','3','2','1','=', '.', '0','+/-']
-        
+        history_button = QPushButton('≡')
+        history_button.clicked.connect(self.history)
         # Create a grid layout and add the buttons
         grid_layout = QGridLayout()
         for i, button in enumerate(buttons):
+            #print('button', button)
             row = i // 4
+            #print('row', row)
             col = 3-(i % 4)
+            #print('col', col)
             button = QPushButton(buttons[i])
             button.clicked.connect(self.emit_number)
             grid_layout.addWidget(button, row, col)
@@ -126,6 +129,7 @@ class MainWindow(QMainWindow):
         # Create a box for text based input to be displayed
         self.label = QLabel(self)
         self.label.setText("0")
+        layout.addWidget(history_button, alignment=Qt.AlignmentFlag.AlignRight )
         layout.addWidget(self.label)
         layout.addLayout(grid_layout)
         
