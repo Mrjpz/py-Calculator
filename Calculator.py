@@ -1,4 +1,5 @@
 import sys
+from collections import deque
 from math import sqrt
 from functools import partial
 from PySide6.QtGui import QPainter, QPen
@@ -11,8 +12,7 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QV
 class MainWindow(QMainWindow):
     @Slot()
     def history(self):
-        #temp
-        None
+        self.activateWindow
     @Slot(str)
     def emit_number(self, text):
         # Button and text variables
@@ -54,12 +54,6 @@ class MainWindow(QMainWindow):
             equation = '√' + equation
             self.label.setText(equation) #Takes care of gui
         if text == '%':
-            self.label.setText(equation)
-        else:
-            self.label.setText(equation)
-        
-        #take care of percentage
-        if text == '=' and '%' in equation:
             operators = ['x','÷','-','+']
             ind = equation.index('%')
             for i in equation:
@@ -69,16 +63,31 @@ class MainWindow(QMainWindow):
             percentage = '.'+equation[ind2+1:ind]
             one_hundred_percent = equation[:ind2]            
             n = str(float(percentage) * float(one_hundred_percent))
-            self.total = n
-            self.label.setText(self.total)
+            equation = equation[:ind2+1] + n +equation[ind:]
+            print(equation)
+            self.label.setText(equation)
+            
+        else:
+            self.label.setText(equation)
+        
+        #take care of percentage
+        if text == '=' and '%' in equation:
+            equation = equation.replace('%=','')
+            self.total = eval(str(equation))
+            app = str(equation) + '=' + str(self.total)
+            self.queue.append(app)
+            self.label.setText(str(self.total))
             self.solved = True
 
         #take care of square root        
         elif text == '=' and "√" in equation:
+            tmp = str(equation)
             equation = equation.replace('√', '')
             equation = equation.replace('=','')
             equation =  sqrt(int(equation))
             self.total = str(equation)
+            app = tmp + '=' + str(self.total)
+            self.queue.append(app)
             self.label.setText(self.total)
             self.solved = True
         #take care of +,-,*,/, and square
@@ -92,10 +101,13 @@ class MainWindow(QMainWindow):
                 equation = equation.replace("÷","/")
             equation = equation.rstrip("=")
             self.total = eval(equation)
+            app = str(equation) + '=' + str(self.total)
+            self.queue.append(app)
             self.label.setText(str(self.total))
             self.solved = True
             
-          
+        
+        print(self.queue)
                 
         
         
@@ -142,6 +154,8 @@ class MainWindow(QMainWindow):
         
         self.solved = False #bool Flag to see if problem is solved
         self.total = 0 #int Flag to see the total
+        # make queue for history
+        self.queue = deque()
         
         
 if __name__ == '__main__':
