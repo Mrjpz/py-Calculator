@@ -4,7 +4,7 @@ from math import sqrt
 from functools import partial
 from PySide6.QtGui import QPainter, QPen
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame, QMenu, QWidgetAction
 
 
 
@@ -12,7 +12,10 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QV
 class MainWindow(QMainWindow):
     @Slot()
     def history(self):
-        self.activateWindow
+        h_button = self.sender()
+        if h_button:
+            None
+            
     @Slot(str)
     def emit_number(self, text):
         # Button and text variables
@@ -126,8 +129,11 @@ class MainWindow(QMainWindow):
         
         # Create buttons
         buttons = ['⌫','C','CE','%','÷','√','x²','1/(x)','x','9','8','7','-','6','5','4','+','3','2','1','=', '.', '0','+/-']
+        
+        # Create history button
         history_button = QPushButton('≡')
         history_button.clicked.connect(self.history)
+        
         # Create a grid layout and add the buttons
         grid_layout = QGridLayout()
         for i, button in enumerate(buttons):
@@ -157,10 +163,10 @@ class MainWindow(QMainWindow):
         # Set the central widget of the main window
         self.setCentralWidget(central_widget)
         
+        
         self.solved = False #bool Flag to see if problem is solved
         self.total = 0 #int Flag to see the total
-        # make queue for history
-        self.queue = deque()
+        self.queue = deque()# make queue for history
         
         
 if __name__ == '__main__':
