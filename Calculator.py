@@ -93,15 +93,20 @@ class MainWindow(QMainWindow):
         #take care of +,-,*,/, and square
         elif text == "=":
             if "²" in equation:
+                tmp = str(equation)
                 equation = equation.replace('²=', '')
                 equation =  equation + '**2'
             elif 'x' in equation:
+                tmp = str(equation)
                 equation = equation.replace("x", '*')
             elif '÷' in equation:
+                tmp = str(equation)
                 equation = equation.replace("÷","/")
+            else:
+                tmp = str(equation)
             equation = equation.rstrip("=")
             self.total = eval(equation)
-            app = str(equation) + '=' + str(self.total)
+            app = tmp + '=' + str(self.total)
             self.queue.append(app)
             self.label.setText(str(self.total))
             self.solved = True
