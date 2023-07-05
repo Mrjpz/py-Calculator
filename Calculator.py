@@ -10,11 +10,15 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QV
 
 
 class MainWindow(QMainWindow):
+    def updateHistoryDisplay(self):
+            self.historyLabel.setText(str(self.queue))
+            
     @Slot()
     def history(self):
-        h_button = self.sender()
-        if h_button:
-            None
+        if self.historyFrame.isVisible():
+            self.historyFrame.hide()
+        else:
+            self.historyFrame.show()
             
     @Slot(str)
     def emit_number(self, text):
@@ -38,25 +42,25 @@ class MainWindow(QMainWindow):
         if text == '⌫' and equation != '0':
             equation = equation[:-2]
             self.label.setText(equation)
-        if text == 'C':
+        elif text == 'C':
             equation = '0'
             self.label.setText(equation)
-        if text == 'CE':
+        elif text == 'CE':
             equation = '0' #needs to be fixed
             self.label.setText(equation)
-        if text == '1/(x)':
+        elif text == '1/(x)':
             equation = '1/(' + equation + ")"
             equation = equation.replace("1/(x)", '')
             self.label.setText(equation)
-        if text == 'x²':
+        elif text == 'x²':
             equation = equation + '²'
             equation = equation.replace('x²', '')
             self.label.setText(equation) #Takes care of gui
-        if text == '√':
+        elif text == '√':
             equation = equation.replace('√', '')
             equation = '√' + equation
             self.label.setText(equation) #Takes care of gui
-        if text == '%':
+        elif text == '%':
             operators = ['x','÷','-','+']
             ind = equation.index('%')
             for i in equation:
@@ -79,6 +83,7 @@ class MainWindow(QMainWindow):
             self.total = eval(str(equation))
             app = str(equation) + '=' + str(self.total)
             self.queue.append(app)
+            self.updateHistoryDisplay()
             self.label.setText(str(self.total))
             self.solved = True
 
@@ -89,8 +94,9 @@ class MainWindow(QMainWindow):
             equation = equation.replace('=','')
             equation =  sqrt(int(equation))
             self.total = str(equation)
-            app = tmp + '=' + str(self.total)
+            app = tmp + str(self.total)
             self.queue.append(app)
+            self.updateHistoryDisplay()
             self.label.setText(self.total)
             self.solved = True
         #take care of +,-,*,/, and square
@@ -109,10 +115,12 @@ class MainWindow(QMainWindow):
                 tmp = str(equation)
             equation = equation.rstrip("=")
             self.total = eval(equation)
-            app = tmp + '=' + str(self.total)
+            app = tmp + str(self.total)
             self.queue.append(app)
+            self.updateHistoryDisplay()
             self.label.setText(str(self.total))
             self.solved = True
+            
             
         
         print(self.queue)
@@ -122,14 +130,27 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-
+        
+        size_tup = [320, 500]
         # Create the mian window size
         self.setWindowTitle('Calculator')
-        self.resize(320, 500)
+        
+        
+        self.resize(size_tup[0], size_tup[1])
         
         # Create buttons
         buttons = ['⌫','C','CE','%','÷','√','x²','1/(x)','x','9','8','7','-','6','5','4','+','3','2','1','=', '.', '0','+/-']
         
+        
+         # Create the history widget
+        self.historyFrame = QFrame(self)
+        self.historyFrame.setObjectName("historyFrame")
+        self.historyLayout = QVBoxLayout(self.historyFrame)
+        self.historyLabel = QLabel("History")
+        self.historyLabel.setObjectName("historyLabel")
+        self.historyLayout.addWidget(self.historyLabel)
+        self.historyFrame.setLayout(self.historyLayout)
+        self.historyFrame.hide()  # Hide initially
         # Create history button
         history_button = QPushButton('≡')
         history_button.clicked.connect(self.history)
@@ -167,6 +188,7 @@ class MainWindow(QMainWindow):
         self.solved = False #bool Flag to see if problem is solved
         self.total = 0 #int Flag to see the total
         self.queue = deque()# make queue for history
+        
         
         
 if __name__ == '__main__':
