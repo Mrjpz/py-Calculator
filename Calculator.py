@@ -11,14 +11,18 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QV
 
 class MainWindow(QMainWindow):
     def updateHistoryDisplay(self):
-            self.historyLabel.setText(str(self.queue))
+            self.historyLabel.setText("\n".join(self.queue))
+            txt=self.historyLabel.text()
+            print(txt)
             
     @Slot()
     def history(self):
         if self.historyFrame.isVisible():
             self.historyFrame.hide()
+            self.label.show()
         else:
             self.historyFrame.show()
+            self.label.hide()
             
     @Slot(str)
     def emit_number(self, text):
@@ -73,6 +77,8 @@ class MainWindow(QMainWindow):
             equation = equation[:ind2+1] + n +equation[ind:]
             print(equation)
             self.label.setText(equation)
+        elif text == '+/-':
+            None
             
         else:
             self.label.setText(equation)
@@ -138,22 +144,29 @@ class MainWindow(QMainWindow):
         
         self.resize(size_tup[0], size_tup[1])
         
+        # Create invisible backround
+        self.invisible_backround = QWidget()
+        
         # Create buttons
         buttons = ['⌫','C','CE','%','÷','√','x²','1/(x)','x','9','8','7','-','6','5','4','+','3','2','1','=', '.', '0','+/-']
+        # Create history button
+        history_button = QPushButton('≡')
+        history_button.clicked.connect(self.history)
         
-        
-         # Create the history widget
+        # Create the history widget
         self.historyFrame = QFrame(self)
         self.historyFrame.setObjectName("historyFrame")
         self.historyLayout = QVBoxLayout(self.historyFrame)
+        self.historyLayout.setContentsMargins(15,15,15,15)
         self.historyLabel = QLabel("History")
         self.historyLabel.setObjectName("historyLabel")
         self.historyLayout.addWidget(self.historyLabel)
         self.historyFrame.setLayout(self.historyLayout)
         self.historyFrame.hide()  # Hide initially
-        # Create history button
-        history_button = QPushButton('≡')
-        history_button.clicked.connect(self.history)
+         # Set the fixed size of the history frame
+        self.historyFrame.setFixedWidth(300)
+        self.historyFrame.setFixedHeight(300)
+        
         
         # Create a grid layout and add the buttons
         grid_layout = QGridLayout()
@@ -173,9 +186,12 @@ class MainWindow(QMainWindow):
         # Create a box for text based input to be displayed
         self.label = QLabel(self)
         self.label.setText("0")
+        
         layout.addWidget(history_button, alignment=Qt.AlignmentFlag.AlignRight )
+        layout.addWidget(self.invisible_backround)
         layout.addWidget(self.label)
         layout.addLayout(grid_layout)
+       
         
         # Create a central widget and set the layout
         central_widget = QWidget()
@@ -209,4 +225,7 @@ make a color wheel
 style the calculator **LAST TASK**
 color wheel hue types
 #test
+
+** Current bugs known bugs
+*Whenever you take the total of an equation and try and add more to it. The contents of the equation are deleted and you cant add to the total.
 '''
