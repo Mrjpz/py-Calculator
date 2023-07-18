@@ -4,7 +4,7 @@ from math import sqrt
 from functools import partial
 from PySide6.QtGui import QPainter, QPen
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame, QMenu, QWidgetAction
+from PySide6.QtWidgets import QApplication, QLabel, QTextEdit, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame, QMenu, QWidgetAction
 
 
 
@@ -12,8 +12,10 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QMainWindow, QV
 class MainWindow(QMainWindow):
     def updateHistoryDisplay(self):
             self.historyLabel.setText("\n".join(self.queue))
-            txt=self.historyLabel.text()
-            print(txt)
+            if len(self.queue) > 15:
+                self.queue.popleft()
+            txt=len(self.queue)#temp code
+            print(txt)#temp code
             
     @Slot()
     def history(self):
@@ -105,6 +107,7 @@ class MainWindow(QMainWindow):
             self.updateHistoryDisplay()
             self.label.setText(self.total)
             self.solved = True
+        
         #take care of +,-,*,/, and square
         elif text == "=":
             if "²" in equation:
@@ -126,14 +129,8 @@ class MainWindow(QMainWindow):
             self.updateHistoryDisplay()
             self.label.setText(str(self.total))
             self.solved = True
-            
-            
-        
-        print(self.queue)
                 
-        
-        
-
+                
     def __init__(self):
         super().__init__()
         
@@ -157,13 +154,12 @@ class MainWindow(QMainWindow):
         self.historyFrame = QFrame(self)
         self.historyFrame.setObjectName("historyFrame")
         self.historyLayout = QVBoxLayout(self.historyFrame)
-        self.historyLayout.setContentsMargins(15,15,15,15)
-        self.historyLabel = QLabel("History")
+        self.historyLabel = QLabel("History", alignment=Qt.AlignmentFlag.AlignTop )
         self.historyLabel.setObjectName("historyLabel")
         self.historyLayout.addWidget(self.historyLabel)
         self.historyFrame.setLayout(self.historyLayout)
         self.historyFrame.hide()  # Hide initially
-         # Set the fixed size of the history frame
+        # Set the fixed size of the history frame
         self.historyFrame.setFixedWidth(300)
         self.historyFrame.setFixedHeight(300)
         
@@ -217,8 +213,7 @@ if __name__ == '__main__':
 '''
 *current task*
 
-create button for the stack history
-use a stack as history(try and use a visual window to see what is stacked)
+
 make a settings button
 make a color wheel
 
