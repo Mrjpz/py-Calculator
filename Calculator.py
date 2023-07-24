@@ -1,4 +1,5 @@
 import sys
+import re
 from collections import deque
 from math import sqrt
 from functools import partial
@@ -80,8 +81,14 @@ class MainWindow(QMainWindow):
             print(equation)
             self.label.setText(equation)
         elif text == '+/-':
-            None
-            
+            numbers = re.findall(r'[-+]?\d*\.\d+|\d+', equation) #find all the numebrs in the equaion
+            tmp = int(numbers[-1])                               #find the last number typed
+            if tmp > 0:                                          #if the number is positive make it negitive and if its negitive make it positive
+                tmp = -abs(tmp)
+            else:
+                tmp = abs(tmp)
+            equation = equation[:equation.rfind(numbers[-1])] + str(tmp) 
+            self.label.setText(equation)
         else:
             self.label.setText(equation)
         
@@ -129,7 +136,8 @@ class MainWindow(QMainWindow):
             self.updateHistoryDisplay()
             self.label.setText(str(self.total))
             self.solved = True
-                
+        
+        
                 
     def __init__(self):
         super().__init__()
