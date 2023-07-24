@@ -4,7 +4,7 @@ from math import sqrt
 from functools import partial
 from PySide6.QtGui import QPainter, QPen
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QApplication, QLabel, QTextEdit, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame, QMenu, QWidgetAction
+from PySide6.QtWidgets import QApplication, QLabel, QTextEdit, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame, QMenu, QWidgetAction, QLineEdit, QTextBrowser
 
 
 
@@ -154,7 +154,8 @@ class MainWindow(QMainWindow):
         self.historyFrame = QFrame(self)
         self.historyFrame.setObjectName("historyFrame")
         self.historyLayout = QVBoxLayout(self.historyFrame)
-        self.historyLabel = QLabel("History", alignment=Qt.AlignmentFlag.AlignTop )
+        self.historyLabel = QLabel("History", alignment = Qt.AlignmentFlag.AlignTop)
+        self.historyLabel.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         self.historyLabel.setObjectName("historyLabel")
         self.historyLayout.addWidget(self.historyLabel)
         self.historyFrame.setLayout(self.historyLayout)
@@ -182,6 +183,7 @@ class MainWindow(QMainWindow):
         # Create a box for text based input to be displayed
         self.label = QLabel(self)
         self.label.setText("0")
+
         
         layout.addWidget(history_button, alignment=Qt.AlignmentFlag.AlignRight )
         layout.addWidget(self.invisible_backround)
