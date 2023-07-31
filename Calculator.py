@@ -20,11 +20,11 @@ class MainWindow(QMainWindow):
             
     @Slot()
     def history(self):
-        if self.historyFrame.isVisible():
-            self.historyFrame.hide()
+        if self.historyLabel.isVisible():
+            self.historyLabel.hide()
             self.label.show()
         else:
-            self.historyFrame.show()
+            self.historyLabel.show()
             self.label.hide()
             
     @Slot(str)
@@ -158,19 +158,16 @@ class MainWindow(QMainWindow):
         history_button = QPushButton('≡')
         history_button.clicked.connect(self.history)
         
-        # Create the history widget
-        self.historyFrame = QFrame(self)
-        self.historyFrame.setObjectName("historyFrame")
-        self.historyLayout = QVBoxLayout(self.historyFrame)
+        
+        # Create a history Qlabel
         self.historyLabel = QLabel("History", alignment = Qt.AlignmentFlag.AlignTop)
         self.historyLabel.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        self.historyLabel.setObjectName("historyLabel")
-        self.historyLayout.addWidget(self.historyLabel)
-        self.historyFrame.setLayout(self.historyLayout)
-        self.historyFrame.hide()  # Hide initially
-        # Set the fixed size of the history frame
-        self.historyFrame.setFixedWidth(300)
-        self.historyFrame.setFixedHeight(300)
+        self.historyLabel.hide()  # Hide history object initially
+        
+        # Set the fixed size of the history label
+        self.historyLabel.setFixedWidth(300)
+        self.historyLabel.setFixedHeight(300)
+       
         
         
         # Create a grid layout and add the buttons
@@ -193,10 +190,14 @@ class MainWindow(QMainWindow):
         self.label.setText("0")
 
         
-        layout.addWidget(history_button, alignment=Qt.AlignmentFlag.AlignRight )
+        
+        layout.insertWidget(0, history_button, alignment=Qt.AlignmentFlag.AlignRight)#temp placement it moves whenever you open the history button 
         layout.addWidget(self.invisible_backround)
         layout.addWidget(self.label)
+        layout.insertWidget(0, self.historyLabel)
         layout.addLayout(grid_layout)
+        
+        
        
         
         # Create a central widget and set the layout
