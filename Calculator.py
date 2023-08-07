@@ -3,17 +3,42 @@ import re
 from collections import deque
 from math import sqrt
 from functools import partial
-from PySide6.QtGui import QPainter, QPen
+from PySide6.QtGui import QPainter, QPen, QAction
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QApplication, QLabel, QTextEdit, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame, QMenu, QWidgetAction, QLineEdit, QTextBrowser
 
+class CustomLineEdit(QLineEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setStyleSheet("background-color: transparent; border: none;")
+        self.setText("0")
+
+    def contextMenuEvent(self, event):
+        # Create a custom context menu
+        context_menu = QMenu(self)
+
+        # Add your custom actions to the context menu
+        cut_action = context_menu.addAction("Cut")
+        copy_action = context_menu.addAction("Copy")
+        paste_action = context_menu.addAction("Paste")
+
+        # Set the custom stylesheet for the context menu
+        context_menu.setStyleSheet("QMenu { background-color: white; } QMenu::item { background-color: lightgray; }")
+        
+        # Connect actions to their functions
+        cut_action.triggered.connect(self.cut)
+        copy_action.triggered.connect(self.copy)
+        paste_action.triggered.connect(self.paste)
+
+        # Execute the context menu at the global position of the event
+        context_menu.exec(event.globalPos())
 
 
 
 class MainWindow(QMainWindow):
     def updateHistoryDisplay(self):
             self.historyLabel.setText("\n".join(self.queue))
-            if len(self.queue) > 15:
+            if len(self.queue) > 14:
                 self.queue.popleft()
             txt=len(self.queue)#temp code
             print(txt)#temp code
@@ -142,7 +167,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        size_tup = [320, 500]
+        size_tup = [320, 515]
         # Create the mian window size
         self.setWindowTitle('Calculator')
         
@@ -158,7 +183,6 @@ class MainWindow(QMainWindow):
         history_button = QPushButton('≡')
         history_button.clicked.connect(self.history)
         
-        
         # Create a history Qlabel
         self.historyLabel = QLabel("History", alignment = Qt.AlignmentFlag.AlignTop)
         self.historyLabel.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
@@ -166,7 +190,7 @@ class MainWindow(QMainWindow):
         
         # Set the fixed size of the history label
         self.historyLabel.setFixedWidth(300)
-        self.historyLabel.setFixedHeight(300)
+        self.historyLabel.setFixedHeight(250)
        
         
         
@@ -186,9 +210,9 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         
         # Create a box for text based input to be displayed
-        self.label = QLabel(self)
+        self.label = CustomLineEdit(self)
+        self.label.setStyleSheet("background-color: transparent; border: none;")
         self.label.setText("0")
-
         
         
         layout.insertWidget(0, history_button, alignment=Qt.AlignmentFlag.AlignRight)#temp placement it moves whenever you open the history button 
