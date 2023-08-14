@@ -33,7 +33,21 @@ class CustomLineEdit(QLineEdit):
         # Execute the context menu at the global position of the event
         context_menu.exec(event.globalPos())
 
-
+class CustomHistory(QTextEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setStyleSheet("background-color: transparent; border: none;")
+        self.setText("0")
+    def contextMenuEvent(self, event):
+        # Create a custom context menu
+        context_menu = QMenu(self)
+        # Add your custom actions to the context menu
+        copy_action = context_menu.addAction("Copy")
+        copy_action.triggered.connect(self.copy)
+        # Set the custom stylesheet for the context menu
+        context_menu.setStyleSheet("QMenu { background-color: white; } QMenu::item { background-color: lightgray; }")
+        # Execute the context menu at the global position of the event
+        context_menu.exec(event.globalPos())
 
 class MainWindow(QMainWindow):
     def updateHistoryDisplay(self):
@@ -51,7 +65,8 @@ class MainWindow(QMainWindow):
         else:
             self.historyLabel.show()
             self.label.hide()
-            
+    
+        
     @Slot(str)
     def emit_number(self, text):
         # Button and text variables
@@ -183,9 +198,9 @@ class MainWindow(QMainWindow):
         history_button = QPushButton('≡')
         history_button.clicked.connect(self.history)
         
+        
         # Create a history Qlabel
-        self.historyLabel = QLabel("History", alignment = Qt.AlignmentFlag.AlignTop)
-        self.historyLabel.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.historyLabel = CustomHistory(self)
         self.historyLabel.hide()  # Hide history object initially
         
         # Set the fixed size of the history label
@@ -208,21 +223,22 @@ class MainWindow(QMainWindow):
             
         # Create a vertical layout
         layout = QVBoxLayout()
+        # Create a additional layout for history
+        history_layout = QVBoxLayout()
         
         # Create a box for text based input to be displayed
         self.label = CustomLineEdit(self)
         self.label.setStyleSheet("background-color: transparent; border: none;")
         self.label.setText("0")
         
-        
-        layout.insertWidget(0, history_button, alignment=Qt.AlignmentFlag.AlignRight)#temp placement it moves whenever you open the history button 
+        history_layout.addWidget(self.historyLabel)
         layout.addWidget(self.invisible_backround)
         layout.addWidget(self.label)
-        layout.insertWidget(0, self.historyLabel)
         layout.addLayout(grid_layout)
+        layout.insertWidget(0, history_button, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.insertWidget(0, self.historyLabel)
         
-        
-       
+
         
         # Create a central widget and set the layout
         central_widget = QWidget()
@@ -248,6 +264,7 @@ if __name__ == '__main__':
 '''
 *current task*
 
+make CE = RE repeat entry for calculation
 
 make a settings button
 make a color wheel
