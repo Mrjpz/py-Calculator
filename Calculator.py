@@ -2,10 +2,8 @@ import sys
 import re
 from collections import deque
 from math import sqrt
-from functools import partial
-from PySide6.QtGui import QPainter, QPen, QAction
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QApplication, QLabel, QTextEdit, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout, QStackedWidget, QFrame, QMenu, QWidgetAction, QLineEdit, QTextBrowser
+from PySide6.QtWidgets import QApplication, QTextEdit, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout,QMenu, QLineEdit
 
 class CustomLineEdit(QLineEdit):
     def __init__(self, parent=None):
