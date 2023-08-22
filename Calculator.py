@@ -199,6 +199,7 @@ class MainWindow(QMainWindow):
         
         # Create a history Qlabel
         self.historyLabel = CustomHistory(self)
+        self.historyLabel.setStyleSheet("background-color: transparent;color:white;border:none")
         self.historyLabel.hide()  # Hide history object initially
         
         # Set the fixed size of the history label
@@ -226,9 +227,10 @@ class MainWindow(QMainWindow):
         
         # Create a box for text based input to be displayed
         self.label = CustomLineEdit(self)
-        self.label.setStyleSheet("background-color: transparent; border: none;")
+        self.label.setStyleSheet("background-color: transparent;color:white; border: none;")
         self.label.setText("0")
-        
+
+    
         history_layout.addWidget(self.historyLabel)
         layout.addWidget(self.invisible_backround)
         layout.addWidget(self.label)
@@ -249,15 +251,30 @@ class MainWindow(QMainWindow):
         self.solved = False #bool Flag to see if problem is solved
         self.total = 0 #int Flag to see the total
         self.queue = deque()# make queue for history
-        
-        
+
+
+app = QApplication(sys.argv)
+app.setStyleSheet('''
+                  QPushButton {
+                        background-color:grey;
+                        color:white;
+                      
+                  }
+                  QMainWindow {
+                      background-color:rgb(22, 23, 22)
+                  }
+                  ''')
         
 if __name__ == '__main__':
     
-    app = QApplication(sys.argv)
+    
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+    
+
+
+
 
 '''
 *current task*
