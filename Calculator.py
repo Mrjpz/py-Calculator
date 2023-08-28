@@ -4,7 +4,7 @@ from collections import deque
 from math import sqrt
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QApplication, QTextEdit, QPushButton, QMainWindow, QVBoxLayout, QWidget, QGridLayout,QMenu, QLineEdit
-
+from PySide6.QtGui import QFont
 class CustomLineEdit(QLineEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -21,7 +21,7 @@ class CustomLineEdit(QLineEdit):
         paste_action = context_menu.addAction("Paste")
 
         # Set the custom stylesheet for the context menu
-        context_menu.setStyleSheet("QMenu { background-color: white; } QMenu::item { background-color: lightgray; }")
+        context_menu.setStyleSheet("QMenu { background-color: lightgray; } QMenu::item { background-color: gray; }")
         
         # Connect actions to their functions
         cut_action.triggered.connect(self.cut)
@@ -43,7 +43,7 @@ class CustomHistory(QTextEdit):
         copy_action = context_menu.addAction("Copy")
         copy_action.triggered.connect(self.copy)
         # Set the custom stylesheet for the context menu
-        context_menu.setStyleSheet("QMenu { background-color: white; } QMenu::item { background-color: lightgray; }")
+        context_menu.setStyleSheet("QMenu { background-color: lightgray; } QMenu::item { background-color: gray; }")
         # Execute the context menu at the global position of the event
         context_menu.exec(event.globalPos())
 
@@ -180,7 +180,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        size_tup = [320, 515]
+        size_tup = [320, 550]
         # Create the mian window size
         self.setWindowTitle('Calculator')
         
@@ -194,6 +194,7 @@ class MainWindow(QMainWindow):
         buttons = ['⌫','C','CE','%','÷','√','x²','1/(x)','x','9','8','7','-','6','5','4','+','3','2','1','=', '.', '0','+/-']
         # Create history button
         history_button = QPushButton('≡')
+        history_button.setFixedSize(75,30)
         history_button.clicked.connect(self.history)
         
         
@@ -202,7 +203,7 @@ class MainWindow(QMainWindow):
         self.historyLabel.setStyleSheet("background-color: transparent;color:white;border:none")
         self.historyLabel.hide()  # Hide history object initially
         
-        # Set the fixed size of the history label
+        # Set the fixed size of the history contents
         self.historyLabel.setFixedWidth(300)
         self.historyLabel.setFixedHeight(250)
        
@@ -217,6 +218,7 @@ class MainWindow(QMainWindow):
             col = 3-(i % 4)
             #print('col', col)
             button = QPushButton(buttons[i])
+            button.setFixedSize(75,30)
             button.clicked.connect(self.emit_number)
             grid_layout.addWidget(button, row, col)
             
@@ -227,9 +229,9 @@ class MainWindow(QMainWindow):
         
         # Create a box for text based input to be displayed
         self.label = CustomLineEdit(self)
-        self.label.setStyleSheet("background-color: transparent;color:white; border: none;")
+        self.label.setStyleSheet("font-size: 15pt;background-color: transparent;color:white; border: none;")
         self.label.setText("0")
-
+        
     
         history_layout.addWidget(self.historyLabel)
         layout.addWidget(self.invisible_backround)
@@ -258,10 +260,18 @@ app.setStyleSheet('''
                   QPushButton {
                         background-color:grey;
                         color:white;
-                      
+                        border: 1px solid grey;
+                  }
+                  QPushButton:pressed{
+                        background-color:#37373b;
+                        
+                        
                   }
                   QMainWindow {
                       background-color:rgb(22, 23, 22)
+                  }
+                  QMainWindow::title {
+                      background-color: black; /* Set background color of title bar */
                   }
                   ''')
         
