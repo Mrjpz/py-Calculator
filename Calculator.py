@@ -74,6 +74,7 @@ class MainWindow(QMainWindow):
         equation = self.label.text()
         
         if self.solved:
+            re_func = equation
             equation = "0"
             self.label.setText(equation)
             self.solved = False
@@ -90,8 +91,8 @@ class MainWindow(QMainWindow):
         elif text == 'C':
             equation = '0'
             self.label.setText(equation)
-        elif text == 'CE':
-            equation = '0' #needs to be fixed
+        elif text == 'RE':
+            equation = re_func
             self.label.setText(equation)
         elif text == '1/(x)':
             equation = '1/(' + equation + ")"
@@ -191,7 +192,7 @@ class MainWindow(QMainWindow):
         self.invisible_backround = QWidget()
         
         # Create buttons
-        buttons = ['⌫','C','CE','%','÷','√','x²','1/(x)','x','9','8','7','-','6','5','4','+','3','2','1','=', '.', '0','+/-']
+        buttons = ['⌫','C','RE','%','÷','√','x²','1/(x)','x','9','8','7','-','6','5','4','+','3','2','1','=', '.', '0','+/-']
         # Create history button
         history_button = QPushButton('≡')
         history_button.setFixedSize(75,30)
@@ -289,15 +290,11 @@ if __name__ == '__main__':
 '''
 *current task*
 
-make CE = RE repeat entry for calculation
-
-make a settings button
-make a color wheel
-
-style the calculator **LAST TASK**
-color wheel hue types
-#test
-
 ** Current bugs known bugs
 *Whenever you take the total of an equation and try and add more to it. The contents of the equation are deleted and you cant add to the total.
+*Zeroing method is wack
+*needs more ram
+*some of the calculatons have issues
+*num pad kinda works just needs enter = "="
+
 '''
