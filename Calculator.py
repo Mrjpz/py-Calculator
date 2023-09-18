@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         equation = self.label.text()
         
         if self.solved:
-            re_func = equation
+            self.re_func = equation
             equation = "0"
             self.label.setText(equation)
             self.solved = False
@@ -92,7 +92,7 @@ class MainWindow(QMainWindow):
             equation = '0'
             self.label.setText(equation)
         elif text == 'RE':
-            equation = re_func
+            equation = self.re_func
             self.label.setText(equation)
         elif text == '1/(x)':
             equation = '1/(' + equation + ")"
